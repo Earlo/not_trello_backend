@@ -18,14 +18,13 @@ app.use('/columns', columnsRouter);
 app.use('/users', usersRouter);
 
 
-const uri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017";
+const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017';
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log("MongoDB database connection established successfully");
-})
+mongoose.connection.once('open', () => {
+  console.log('MongoDB database connection established successfully');
+});
 
 app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
+  console.log(`Server is running on port: ${port}`);
 });

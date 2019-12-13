@@ -1,10 +1,10 @@
 const router = require('express').Router();
-let Column = require('../models/column.model');
+const Column = require('../models/column.model');
 
 router.route('/').get((req, res) => {
   Column.find()
-    .then(columns => res.json(columns))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .then((columns) => res.json(columns))
+    .catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
 router.route('/add').post((req, res) => {
@@ -19,34 +19,34 @@ router.route('/add').post((req, res) => {
   });
 
   newColumn.save()
-  .then(() => res.json('Column added!'))
-  .catch(err => res.status(400).json('Error: ' + err));
+    .then(() => res.json('Column added!'))
+    .catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
 router.route('/:id').get((req, res) => {
   Column.findById(req.params.id)
-    .then(column => res.json(column))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .then((column) => res.json(column))
+    .catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
 router.route('/:id').delete((req, res) => {
   Column.findByIdAndDelete(req.params.id)
     .then(() => res.json('Column deleted.'))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
 router.route('/update/:id').post((req, res) => {
   Column.findById(req.params.id)
-    .then(column => {
+    .then((column) => {
       column.title = req.body.title;
       column.color = req.body.color;
       column.priority = Number(req.body.priority);
 
       column.save()
         .then(() => res.json('Column updated!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch((err) => res.status(400).json(`Error: ${err}`));
     })
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
 // TODO task CRUD
