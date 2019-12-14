@@ -44,18 +44,19 @@ router.route('/:id').delete((req, res) => {
     .catch((err) => res.status(400).json(`Error: ${err}`));
 });
 
-router.route('/update/:id').post((req, res) => {
-  Column.findById(req.params.id)
-    .then((column) => {
-      column.title = req.body.title;
-      column.color = req.body.color;
-      column.priority = Number(req.body.priority);
-
-      column.save()
-        .then(() => res.json('Column updated!'))
-        .catch((err) => res.status(400).json(`Error: ${err}`));
-    })
-    .catch((err) => res.status(400).json(`Error: ${err}`));
+router.route('/update/:id').put((req, res) => {
+  console.log(req.params.id);
+  Column.findByIdAndUpdate(
+    { _id: req.params.id },
+    { title: req.body.title, color: req.body.color, priority: req.body.priority },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
+    },
+  );
 });
 
 // TODO task CRUD
