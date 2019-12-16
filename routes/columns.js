@@ -45,7 +45,6 @@ router.route('/:id').delete((req, res) => {
 });
 
 router.route('/update/:id').put((req, res) => {
-  console.log(req.params.id);
   Column.findByIdAndUpdate(
     { _id: req.params.id },
     { title: req.body.title, color: req.body.color, priority: req.body.priority },
@@ -59,7 +58,84 @@ router.route('/update/:id').put((req, res) => {
   );
 });
 
+
 // TODO task CRUD
+
+router.route('/:id/addtask').post((req, res) => {
+  Column.findById(req.params.id).exec((err, column) => {
+    const { tasks } = column;
+    const { name } = req.body;
+    const { desc } = req.body;
+    const { status } = req.body;
+    const priority = (Array.isArray(tasks) && tasks.length)
+      ? tasks.reduce((max, o) => (o.priority > max ? o.priority : max), tasks[0].priority) + 1
+      : 0;
+
+    const task = {
+      name,
+      desc,
+      status,
+      priority,
+      comments: [],
+    };
+    Column.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $push: { tasks: task } },
+      (serr, result) => {
+        if (serr) {
+          res.send(serr);
+        } else {
+          res.send(result);
+        }
+      },
+    );
+  });
+});
+
+router.route('/:id/edittask').put((req, res) => {
+  console.log(req.body);
+  const task = {
+    _id: req.body.id,
+    name: req.body.name,
+    desc: req.body.desc,
+    status: req.body.status,
+    priority: req.body.priority,
+    comments: req.body.comments,
+  };
+  Column.findOneAndUpdate({ _id: req.params.id, 'tasks._id': req.body.id },
+    {
+      $set: {
+        'tasks.$': task,
+      },
+    },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
+    });
+});
+
+router.route('/:id/deletetask/:task_id').delete((req, res) => {
+  console.log(req.params.id, req.params.task_id);
+
+  Column.findOneAndUpdate({ _id: req.params.id },
+    {
+      $pull: {
+        tasks: { _id: req.params.task_id },
+      },
+    },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
+    });
+});
+
+
 // TODO comment CRUD
 
 module.exports = router;

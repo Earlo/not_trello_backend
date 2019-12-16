@@ -1,7 +1,7 @@
 {
   "name": "not_trello_backend",
   "version": "0.1.0",
-  "description": "Backend for 10h Trello demo",
+  "desc": "Backend for 10h Trello demo",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
