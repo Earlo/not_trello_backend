@@ -93,7 +93,6 @@ router.route('/:id/addtask').post((req, res) => {
 });
 
 router.route('/:id/edittask').put((req, res) => {
-  console.log(req.body);
   const task = {
     _id: req.body.id,
     name: req.body.name,
@@ -117,9 +116,25 @@ router.route('/:id/edittask').put((req, res) => {
     });
 });
 
-router.route('/:id/deletetask/:task_id').delete((req, res) => {
-  console.log(req.params.id, req.params.task_id);
+router.route('/:id/toggletask/:task_id').patch((req, res) => {
+  const { status } = req.body;
+  console.log(req.params.id, req.params.task_id, status);
+  Column.findOneAndUpdate({ _id: req.params.id, 'tasks._id': req.params.task_id },
+    {
+      $set: {
+        'tasks.$.status': status,
+      },
+    },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
+    });
+});
 
+router.route('/:id/deletetask/:task_id').delete((req, res) => {
   Column.findOneAndUpdate({ _id: req.params.id },
     {
       $pull: {
