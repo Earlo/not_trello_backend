@@ -12,7 +12,8 @@ const columnSchema = new Schema({
     priority: { type: Number, required: true },
     comments: [{
       text: { type: String, require: true },
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      user: { type: String, require: true },
+      // { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       timestamp: { type: Date, default: Date.now },
     }],
   }],

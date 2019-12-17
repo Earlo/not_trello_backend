@@ -118,7 +118,6 @@ router.route('/:id/edittask').put((req, res) => {
 
 router.route('/:id/toggletask/:task_id').patch((req, res) => {
   const { status } = req.body;
-  console.log(req.params.id, req.params.task_id, status);
   Column.findOneAndUpdate({ _id: req.params.id, 'tasks._id': req.params.task_id },
     {
       $set: {
@@ -152,5 +151,26 @@ router.route('/:id/deletetask/:task_id').delete((req, res) => {
 
 
 // TODO comment CRUD
+
+router.route('/:id/addcomment/:task_id').patch((req, res) => {
+  const { text } = req.body;
+  const { user } = req.body;
+  const comment = {
+    text,
+    user,
+  };
+  Column.findOneAndUpdate({ _id: req.params.id, 'tasks._id': req.params.task_id },
+    {
+      $push: { 'tasks.$.comments': comment },
+    },
+    (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
+    });
+});
+
 
 module.exports = router;
