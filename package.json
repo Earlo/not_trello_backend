@@ -1,6 +1,9 @@
 {
   "name": "not_trello_backend",
   "version": "0.1.0",
+  "engines": {
+    "node": "12.5.0"
+  },
   "desc": "Backend for 10h Trello demo",
   "main": "server.js",
   "scripts": {
